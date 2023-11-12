@@ -18,7 +18,7 @@ steps:
   - 'us-central1-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REPO/web-app:$SHORT_SHA'
 
 - name: 'gcr.io/cloud-builders/gcloud'
-  id: Clone myapp1-k8s-repo repository
+  id: Clone TafariBeckford-GKE-Argo-CD repository
   entrypoint: /bin/sh
   args:
   - '-c'
