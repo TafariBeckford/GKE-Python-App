@@ -19,7 +19,7 @@ steps:
   args:
   - '-c'
   - |
-    git clone https://github.com/TafariBeckford/GKE-Python-App.git && \
+    git clone https://github.com/TafariBeckford/GKE-Argo-CD.git && \
     cd GKE-Argo-CD && \
     git config user.email $(gcloud auth list --filter=status:ACTIVE --format='value(account)')
 
@@ -27,12 +27,14 @@ steps:
 - name: 'gcr.io/cloud-builders/git'
   id: Generate Kubernetes manifest
   entrypoint: /bin/sh
+  dir: manifest
   args:
   - '-c'
   - |
-     sed "s/GOOGLE_CLOUD_PROJECT/${PROJECT_ID}/g" manifest/kubernetes.yaml \
-     sed "s/REPO_NAME/${_ARTIFACT_REPO}/g" manifest/kubernetes.yaml \
-     sed "s/COMMIT_SHA/${SHORT_SHA}/g" manifest/kubernetes.yaml
+     cd GKE-Argo-CD && \
+     sed "s/GOOGLE_CLOUD_PROJECT/${PROJECT_ID}/g" /manifest/kubernetes.yaml \
+     sed "s/REPO_NAME/${_ARTIFACT_REPO}/g" /manifest/kubernetes.yamll \
+     sed "s/COMMIT_SHA/${SHORT_SHA}/g" /manifest/kubernetes.yaml
      
 - name: 'gcr.io/cloud-builders/git'
   id: Push manifest
@@ -41,7 +43,7 @@ steps:
   - '-c'
   - |
     set -x && \
-    cd TafariBeckford-GKE-Argo-CD && \
+    cd GKE-Argo-CD && \
     git add kubernetes.yaml && \
     git commit -m "Deploying image us-central1-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPO}/webapp:${SHORT_SHA}
     Built from commit ${COMMIT_SHA} of repository TafariBeckford-GKE-Argo-CD
