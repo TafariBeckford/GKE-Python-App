@@ -2,20 +2,18 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   id: Build
   env:
-    - "image-repository-876=$ARTIFACT_REPO"
+    - 'image-repository-876=$ARTIFACT_REPO'
   args:
   - 'build'
   - '-t'
-  - 'us-central1-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REPO/web-app:$SHORT_SHA'
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/$_ARTIFACT_REPO/web-app:$SHORT_SHA'
   - '.'
 
 - name: 'gcr.io/cloud-builders/docker'
   id: Push
-  env:
-    - "image-repository-876=$ARTIFACT_REPO"
   args:
   - 'push'
-  - 'us-central1-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REPO/web-app:$SHORT_SHA'
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/$_ARTIFACT_REPO/web-app:$SHORT_SHA'
 
 - name: 'gcr.io/cloud-builders/gcloud'
   id: Clone TafariBeckford-GKE-Argo-CD repository
@@ -30,28 +28,28 @@ steps:
 
 - name: 'gcr.io/cloud-builders/gcloud'
   id: Generate Kubernetes manifest
-  env:
-    - "image-repository-876=$ARTIFACT_REPO"
   entrypoint: /bin/sh
   args:
   - '-c'
   - |
      sed "s/GOOGLE_CLOUD_PROJECT/${PROJECT_ID}/g" manifest/kubernetes.yaml \
-     sed "s/REPO_NAME/${$ARTIFACT_REPO}/g" manifest/kubernetes.yaml \
+     sed "s/REPO_NAME/${$_ARTIFACT_REPO}/g" manifest/kubernetes.yaml \
      sed "s/COMMIT_SHA/${SHORT_SHA}/g" manifest/kubernetes.yaml
      
 - name: 'gcr.io/cloud-builders/gcloud'
   id: Push manifest
   entrypoint: /bin/sh
-  env:
-    - "image-repository-876=$ARTIFACT_REPO"
   args:
   - '-c'
   - |
     set -x && \
     cd TafariBeckford-GKE-Argo-CD && \
     git add kubernetes.yaml && \
-    git commit -m "Deploying image us-central1-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REPO/webapp:${SHORT_SHA}
+    git commit -m "Deploying image us-central1-docker.pkg.dev/$PROJECT_ID/$_ARTIFACT_REPO/webapp:${SHORT_SHA}
     Built from commit ${COMMIT_SHA} of repository TafariBeckford-GKE-Argo-CD
     Author: $(git log --format='%an <%ae>' -n 1 HEAD)" && \
     git push origin main
+    
+  automapSubstitutions: true
+substitutions:
+  _ARTIFACT_REPO: "image-repository-876"
