@@ -20,8 +20,7 @@ steps:
   - '-c'
   - |
     git clone https://github.com/TafariBeckford/GKE-Argo-CD.git && \
-    cd GKE-Argo-CD && \
-    git config --local user.email $(gcloud auth list --filter=status:ACTIVE --format='value(account)') \
+    cd GKE-Argo-CD && 
     cat /manifest/kubernetes.yaml
  
 
