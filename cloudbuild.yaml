@@ -13,7 +13,7 @@ steps:
   - 'push'
   - 'us-central1-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPO}/web-app:$SHORT_SHA'
 
-- name: 'gcr.io/cloud-builders/gcloud'
+- name: 'gcr.io/cloud-builders/git'
   id: Clone TafariBeckford-GKE-Argo-CD repository
   entrypoint: /bin/sh
   args:
