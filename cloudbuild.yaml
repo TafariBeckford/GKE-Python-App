@@ -19,7 +19,7 @@ steps:
   args:
   - '-c'
   - |
-    git clone https://github.com/TafariBeckford/GKE-Python-App.git && \
+    git clone https://github.com/TafariBeckford/GKE-Argo-CD.git && \
     cd GKE-Argo-CD && \
     git config user.email $(gcloud auth list --filter=status:ACTIVE --format='value(account)')
 
