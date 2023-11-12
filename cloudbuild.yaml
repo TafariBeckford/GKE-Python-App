@@ -30,6 +30,7 @@ steps:
   args:
   - '-c'
   - |
+     cd GKE-Argo-CD && \
      sed "s/GOOGLE_CLOUD_PROJECT/${PROJECT_ID}/g" /manifest/kubernetes.yaml \
      sed "s/REPO_NAME/${_ARTIFACT_REPO}/g" /manifest/kubernetes.yamll \
      sed "s/COMMIT_SHA/${SHORT_SHA}/g" /manifest/kubernetes.yaml
